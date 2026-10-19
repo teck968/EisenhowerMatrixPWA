@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "Focus Field — Dynamic Eisenhower Matrix",
+  "short_name": "Focus Field",
+  "description": "A private, offline task matrix with an adjustable focus threshold.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5ef",
+  "theme_color": "#142f35",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

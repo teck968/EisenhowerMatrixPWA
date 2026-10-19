@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142f35">
+  <meta name="description" content="Find your next task with a dynamic Eisenhower Matrix. Private, local, and ready offline.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Focus Field · Dynamic Eisenhower Matrix</title>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="./" aria-label="Focus Field home"><span class="brand-icon" aria-hidden="true">✦</span> Focus Field <span class="brand-caption">DYNAMIC EISENHOWER MATRIX</span></a><span class="local-tag">On this device</span></header>
+  <main>
+    <section class="intro"><div><p class="eyebrow">A LITTLE CLARITY. YOUR NEXT MOVE.</p><h1>Make room for what matters.</h1><p class="subtitle">Rate your tasks. Adjust your focus. Take the next step.</p></div><button id="add-task" class="primary" disabled>＋ Add task</button></section>
+    <p id="notice" class="notice" role="status" aria-live="polite">Opening your local workspace…</p>
+    <div class="workspace">
+      <section class="matrix-card" aria-labelledby="matrix-heading">
+        <div class="section-heading"><div><p class="eyebrow">THE BIG PICTURE</p><h2 id="matrix-heading">Your matrix</h2></div><span id="active-count" class="count-label">0 active tasks</span></div>
+        <div class="focus-control"><div><strong>Focus threshold</strong><p id="threshold-description">Ratings 5–10 in both dimensions</p></div><div class="stepper"><button id="contract" aria-label="Contract focus: increase threshold" title="Contract focus" disabled>−</button><button id="expand" aria-label="Expand focus: decrease threshold" title="Expand focus" disabled>+</button></div></div>
+        <div class="chart-wrap">
+          <div class="y-title">IMPORTANCE <span aria-hidden="true">→</span></div><div id="y-ticks" class="y-ticks" aria-hidden="true"></div>
+          <div id="plot" class="plot" role="group" aria-label="Task matrix. Urgency increases to the right; importance increases upward."></div>
+          <div id="x-ticks" class="x-ticks" aria-hidden="true"></div><div class="x-title">URGENCY <span aria-hidden="true">→</span></div>
+        </div>
+        <div class="legend"><span><i class="swatch high-high"></i>Do now</span><span><i class="swatch high-low"></i>Schedule</span><span><i class="swatch low-high"></i>Delegate</span><span><i class="swatch low-low"></i>Remove</span></div>
+        <p class="chart-help">Tap a point to open a task. Overlapping tasks open together.<br><strong>+</strong> broadens your focus. <strong>−</strong> narrows it. Your ratings stay the same.</p>
+      </section>
+      <aside class="focus-card" aria-labelledby="focus-heading"><div class="section-heading"><div><p class="eyebrow">RIGHT NOW</p><h2 id="focus-heading">In focus <span id="focus-count" class="pill">0</span></h2></div><button id="toggle-focus" class="text-button" aria-expanded="true">Hide list</button></div><p class="focus-explanation">Important and urgent at your current threshold.</p><div id="focus-body"><div id="focus-list" class="task-list"></div><p class="list-note">In creation order. Use the matrix to adjust your focus.</p></div></aside>
+    </div>
+    <section class="all-card" aria-labelledby="tasks-heading"><div class="section-heading"><div><p class="eyebrow">YOUR WORKSPACE</p><h2 id="tasks-heading">All tasks</h2></div><div class="tabs" role="group" aria-label="Task status"><button id="show-active" aria-pressed="true">Active <span id="active-tab-count">0</span></button><button id="show-completed" aria-pressed="false">Completed <span id="completed-count">0</span></button></div></div><div id="all-list" class="all-list"></div></section>
+    <details class="example-tools" id="example-tools">
+      <summary>Example tasks</summary>
+      <p>Add tasks to explore the matrix, then remove them when you are done. Tasks you create are kept.</p>
+      <div class="example-actions"><button id="load-example" disabled>Add 10 example tasks</button><button id="remove-examples" class="danger" disabled>Remove example tasks</button></div>
+    </details>
+    <footer><div><strong>Your tasks stay with you.</strong><p id="offline-status">Checking offline availability…</p></div><div class="footer-actions"><button id="export" disabled>Export JSON</button><button id="import" disabled>Import JSON</button><button id="install" hidden>Install app</button><button id="update" hidden>Update available</button><button id="help" class="text-button">Install help</button></div></footer>
+  </main>
+  <dialog id="task-dialog"><form id="task-form"><div class="dialog-heading"><h2 id="task-dialog-title">New task</h2><button type="button" class="close" data-close="task-dialog" aria-label="Close task">×</button></div><input id="task-id" type="hidden"><label for="task-title">Title <span class="required">required</span></label><input id="task-title" maxlength="200" required autocomplete="off" placeholder="What needs doing?"><label for="task-description">Description <span class="optional">optional</span></label><textarea id="task-description" maxlength="10000" rows="3" placeholder="A few details for later"></textarea><div class="rating-field"><label for="importance">Importance <output id="importance-value">5</output></label><p>How much does this matter?</p><input id="importance" type="range" min="1" max="10" step="1" value="5"><div class="range-labels"><span>1 · Less important</span><span>10 · Very important</span></div></div><div class="rating-field"><label for="urgency">Urgency <output id="urgency-value">5</output></label><p>How soon does this need attention?</p><input id="urgency" type="range" min="1" max="10" step="1" value="5"><div class="range-labels"><span>1 · Can wait</span><span>10 · Time-sensitive</span></div></div><p id="task-meta" class="list-note"></p><p id="task-error" class="error" role="alert"></p><div class="dialog-actions"><button type="button" id="delete-task" class="danger" hidden>Delete</button><button type="button" id="complete-task" hidden>Mark completed</button><button type="submit" class="primary">Save task</button></div></form></dialog>
+  <dialog id="picker-dialog"><div class="dialog-heading"><h2>Tasks at this point</h2><button class="close" data-close="picker-dialog" aria-label="Close task picker">×</button></div><p id="picker-description"></p><div id="picker-list" class="task-list"></div></dialog>
+  <input id="import-file" type="file" accept=".json,application/json" hidden>
+  <dialog id="import-dialog"><form id="import-form"><div class="dialog-heading"><h2>Import your tasks</h2><button type="button" class="close" data-close="import-dialog" aria-label="Cancel import">×</button></div><p id="import-summary"></p><label class="radio-card"><input type="radio" name="import-mode" value="merge" checked><span><strong>Merge</strong><small>Combine tasks by ID. The newer updated record wins; ties keep your local record. Keep this device’s threshold and preferences.</small></span></label><label class="radio-card"><input type="radio" name="import-mode" value="replace"><span><strong>Replace</strong><small>Remove all current tasks and settings, then use the imported data. Export a backup first if you want to keep a copy.</small></span></label><p id="import-preview" class="notice"></p><p id="import-error" class="error" role="alert"></p><div class="dialog-actions"><button type="button" data-close="import-dialog">Cancel</button><button type="submit" class="primary">Confirm import</button></div></form></dialog>
+  <dialog id="confirm-dialog"><div class="dialog-heading"><h2>Delete task?</h2></div><p id="delete-description"></p><p>This permanently removes the task from this device.</p><div class="dialog-actions"><button id="cancel-delete">Cancel</button><button id="confirm-delete" class="danger">Delete task</button></div></dialog>
+  <dialog id="remove-examples-dialog" aria-labelledby="remove-examples-heading"><h2 id="remove-examples-heading">Remove example tasks?</h2><p id="remove-examples-summary"></p><p>This includes edited and completed examples. Tasks you created will be kept.</p><p id="remove-examples-error" class="error" role="alert"></p><div class="dialog-actions"><button id="cancel-remove-examples" data-close="remove-examples-dialog">Cancel</button><button id="confirm-remove-examples" class="danger">Remove examples</button></div></dialog>
+  <dialog id="help-dialog"><div class="dialog-heading"><h2>Take your workspace with you</h2><button class="close" data-close="help-dialog" aria-label="Close install help">×</button></div><p>On iPhone or iPad, open this app in Safari, use Share, then Add to Home Screen. On Android, use your browser’s Install app or Add to home screen option when available.</p><p>Wait for “Ready offline” before disconnecting. Installation support depends on the browser. Task data belongs to this browser and device; use Export JSON to make a backup or move it elsewhere.</p><p>Clearing browser data can remove tasks. Private browsing may not retain data after you close it.</p></dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
+
+
+
+
